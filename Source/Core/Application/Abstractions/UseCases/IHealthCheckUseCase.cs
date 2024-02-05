@@ -2,12 +2,17 @@
 
 namespace Application.Abstractions.UseCases;
 
-public interface IHealthCheckUseCase : IUseCase<IHealthCheckUseCase.Input, string>
+public interface IHealthCheckUseCase : IUseCase<IHealthCheckUseCase.Input, IHealthCheckUseCase.Output>
 {
     public interface Input
     {
-        string HealthMessage { get; }
+        string CheckInMessage { get; }
 
         string ToJson() => JsonSerializer.Serialize(this);
+    }
+
+    public interface Output
+    {
+        string HealthyOutputMessage { get; }
     }
 }

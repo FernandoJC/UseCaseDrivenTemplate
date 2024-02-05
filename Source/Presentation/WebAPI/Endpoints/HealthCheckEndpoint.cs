@@ -7,18 +7,22 @@ public static class HealthCheckEndpoint
 {
     public static void RegisterHealthCheckEndpoint(this WebApplication app)
     {
-        var endpoints = app.MapGroup($"/healthcheck");
-        endpoints.MapGet("/", async (IHealthCheckUseCase healthCheckUseCase, string message) =>
+        var endpoints = app.MapGroup("/healthcheck");
+        endpoints.MapGet("/", HealthCheckEndpointHandler).WithName("HealthCheck").WithOpenApi();
+    }
+
+    public static async Task<IResult> HealthCheckEndpointHandler(IHealthCheckUseCase healthCheckUseCase, string checkInMessage)
+    {
+        try
         {
-            var input = new HealthCheckUseCaseInput(message);
+            var input = new HealthCheckUseCaseInput(checkInMessage);
             var output = await healthCheckUseCase.Execute(input);
-            var result = new
-            {
-                healthCheckMessage = output
-            };
-            return Results.Ok(result);
-        })
-        .WithName("HealthCheck")
-        .WithOpenApi();
+            return Results.Ok(output);
+        }
+        catch (Exception exception)
+        {
+            // Possible logging here.
+            return Results.Problem(exception.Message, statusCode: 500);
+        }
     }
 }

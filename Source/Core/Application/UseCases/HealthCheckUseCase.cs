@@ -8,17 +8,22 @@ public class HealthCheckUseCase(ILogger<HealthCheckUseCase> logger) : IHealthChe
     private const string UseCaseName = nameof(HealthCheckUseCase);
     private readonly ILogger<HealthCheckUseCase> logger = logger;
 
-    public Task<string> Execute(IHealthCheckUseCase.Input input)
+    public Task<IHealthCheckUseCase.Output> Execute(IHealthCheckUseCase.Input input)
     {
         logger.LogInformation("Executing {usecase} with input {input}", UseCaseName, input.ToJson());
-        var healthyMessage = $"Health check processed message '{input.HealthMessage}' successfully!";
+        var healthyMessage = $"Health check processed message '{input.CheckInMessage}' successfully!";
 
         logger.LogInformation("Finished {usecase} execution", UseCaseName);
-        return Task.FromResult(healthyMessage);
+        return Task.FromResult(new HealthCheckUseCaseOutput(healthyMessage) as IHealthCheckUseCase.Output);
     }
 }
 
-public class HealthCheckUseCaseInput(string healthMessage) : IHealthCheckUseCase.Input
+public class HealthCheckUseCaseInput(string checkInMessage) : IHealthCheckUseCase.Input
 {
-    public string HealthMessage { get; } = healthMessage;
+    public string CheckInMessage { get; } = checkInMessage;
+}
+
+public class HealthCheckUseCaseOutput(string healthyOutputMessage) : IHealthCheckUseCase.Output
+{
+    public string HealthyOutputMessage { get; } = healthyOutputMessage;
 }
