@@ -11,7 +11,7 @@ public class HealthCheckUseCase(ILogger<HealthCheckUseCase> logger) : IHealthChe
     public Task<string> Execute(IHealthCheckUseCase.Input input)
     {
         logger.LogInformation("Executing {usecase} with input {input}", UseCaseName, input.ToJson());
-        var healthyMessage = $"Health check received message '{input.HealthMessage}' successfully!";
+        var healthyMessage = $"Health check processed message '{input.HealthMessage}' successfully!";
 
         logger.LogInformation("Finished {usecase} execution", UseCaseName);
         return Task.FromResult(healthyMessage);

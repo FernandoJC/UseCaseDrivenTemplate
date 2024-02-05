@@ -21,6 +21,6 @@ public class HealthCheckUseCaseTests
         var input = new HealthCheckUseCaseInput("Testing");
         var output = await healthCheckUseCase.Execute(input);
 
-        output.ShouldBe("Health check received message 'Testing' successfully!");
+        output.ShouldBe("Health check processed message 'Testing' successfully!");
     }
 }

@@ -1,6 +1,5 @@
 using Application;
-using Application.Abstractions.UseCases;
-using Application.UseCases;
+using WebAPI.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
@@ -15,18 +14,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.MapGet("/healthcheck", async (IHealthCheckUseCase healthCheckUseCase, string message) =>
-{
-    var input = new HealthCheckUseCaseInput(message);
-    var output = await healthCheckUseCase.Execute(input);
-    var result = new
-    {
-        healthCheckMessage = output
-    };
-    return Results.Ok(result);
-})
-.WithName("HealthCheck")
-.WithOpenApi();
-
+app.RegisterHealthCheckEndpoint();
 app.Run();
